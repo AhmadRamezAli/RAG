@@ -1,22 +1,17 @@
-from langchain.text_splitter import CharacterTextSplitter
-from langchain.schema.runnable import RunnablePassthrough
-from langchain.schema.output_parser import StrOutputParser
 from ollama import Client
-from Convertor import Convertor
-from langchain.text_splitter import CharacterTextSplitter
-from Spliter import split_text_into_chunks
-from PDFLoader import PDFLoader 
-from ChromaDB import collection
+from convertor import Convertor
+from spliter import split_text_into_chunks
+from loaders.pdf_loader import PDFLoader 
+from chromadbinit import collection
 import uuid
 from ollama import Client
 
-documents=PDFLoader("aram mohammed.pdf")
+documents=PDFLoader(r"src/aram_mohammed.pdf")
 documents= Convertor(documents)
 docs=documents.convert()
 
 docs = split_text_into_chunks(docs,500,10)
 
-# Generate unique IDs for each document
 ids = [str(uuid.uuid4()) for _ in range(len(docs))]
 
 
@@ -27,8 +22,8 @@ collection.add(
 
 question = "what is the outline of this paper"
 results = collection.query(
-    query_texts=[question], # Chroma will embed this for you
-    n_results=10 # how many results to return
+    query_texts=[question],
+    n_results=5 # how many results to return
 )
 
 context=""

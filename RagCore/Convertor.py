@@ -1,4 +1,4 @@
-from DocumentLoader import DocumentLoader
+from loaders.documen_loader import DocumentLoader
 
 
 class Convertor:

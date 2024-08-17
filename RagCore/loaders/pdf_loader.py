@@ -1,6 +1,6 @@
 from langchain_community.document_loaders import PyPDFLoader
 
-from DocumentLoader import DocumentLoader
+from loaders.documen_loader import DocumentLoader
 class PDFLoader(DocumentLoader):
     def __init__(self, file_path: str):
         self.file_path = file_path

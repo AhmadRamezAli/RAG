@@ -1,5 +1,5 @@
 from docx import Document
-from DocumentLoader import DocumentLoader
+from loaders.documen_loader import DocumentLoader
 class DocxLoader(DocumentLoader):
     def __init__(self, file_path: str):
         self.file_path = file_path
