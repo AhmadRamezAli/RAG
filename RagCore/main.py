@@ -50,7 +50,7 @@ Answer:
 
 
 client = Client(host='http://172.25.1.141:11434')
-response = client.chat(model='mistral', messages=[
+response = client.chat(model='llama3', messages=[
   {
     'role': 'user',
     'content': template,
