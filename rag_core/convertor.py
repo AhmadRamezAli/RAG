@@ -1,4 +1,4 @@
-from loaders.documen_loader import DocumentLoader
+from rag_core.loaders.document_loader import DocumentLoader
 
 
 class Convertor:

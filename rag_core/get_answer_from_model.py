@@ -1,19 +1,18 @@
 from ollama import Client
-from convertor import Convertor
-from spliter import split_text_into_chunks
-from loaders.pdf_loader import PDFLoader 
-from chromadbinit import collection
 import uuid
-from ollama import Client
+from rag_core.convertor import Convertor
+from rag_core.spliter import split_text_into_chunks
+from rag_core.loaders.pdf_loader import PDFLoader 
+from rag_core.chromadbinit import collection
 
 
 
-def postquery(docpath,question):
+def get_answer_from_model(docpath,chunks,numofresults,question):
     documents=PDFLoader(docpath)
     documents= Convertor(documents)
     docs=documents.convert()
 
-    docs = split_text_into_chunks(docs,500,10)
+    docs = split_text_into_chunks(docs,chunks,10)
 
     ids = [str(uuid.uuid4()) for _ in range(len(docs))]
 
@@ -24,7 +23,7 @@ def postquery(docpath,question):
     )
     results = collection.query(
         query_texts=[question],
-        n_results=2 # how many results to return
+        n_results=numofresults # how many results to return
     )
 
     context=""
