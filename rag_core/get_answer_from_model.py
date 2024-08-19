@@ -1,10 +1,9 @@
-from ollama import Client
 import uuid
 from rag_core.convertor import Convertor
 from rag_core.spliter import split_text_into_chunks
 from rag_core.loaders.pdf_loader import PDFLoader 
 from rag_core.chromadbinit import collection
-
+from rag_core.llm_client.hiast_client import HiastClient
 
 
 def get_answer_from_model(docpath,chunks,numofresults,question):
@@ -44,12 +43,7 @@ def get_answer_from_model(docpath,chunks,numofresults,question):
 
 
 
-    client = Client(host='http://172.25.1.141:11434')
-    response = client.chat(model='llama3', messages=[
-    {
-        'role': 'user',
-        'content': template,
-    },
-    ])
+    client = HiastClient()
+    response = client.chat('user',template)
     return response
 
