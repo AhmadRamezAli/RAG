@@ -1,8 +1,8 @@
-from fastapi import FastAPI,Body, File, Form, UploadFile
+from fastapi import FastAPI,Body, File, Form, UploadFile,Request
 from fastapi import APIRouter
 from rag_core.get_answer_from_model import get_answer_from_model
 from pydantic import BaseModel
-from typing import Optional
+from typing import List
 router = APIRouter(prefix="/api")
 
 
@@ -17,35 +17,43 @@ def root():
 
 @router.post("/uploadfile/")
 async def postupload(
-    file: UploadFile
+    files:list [UploadFile]=File(...)
 ):
-    print(f"Received file: {file.filename}, size: {file.size} bytes")
-    file_location = f"rag_core/src/{file.filename}"
+    print(len(files))
+    for file in files:
+        print(f"Received file: {file.filename}, size: {file.size} bytes")
+        file_location = f"rag_core/src/{file.filename}"
 
-    try:
-        # Save the file
-        with open(file_location, "wb") as f:
-            f.write(await file.read())
+        try:
+            # Save the file
+            with open(file_location, "wb") as f:
+                f.write(await file.read())
+            
+            print(f"File saved to: {file_location}")
+
         
-        print(f"File saved to: {file_location}")
-        return  {"message": "file saved saccussefully"}
-    
-    except Exception as e:
-        print(f"Error occurred: {e}")
-        return {"message": "Error processing file", "error": str(e)}
-    
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return {"message": "Error processing file", "error": str(e)}
+    return  {"message": "file saved saccussefully"}
 
 
 @router.post("/query/")
 async def postq(
-    chunks: int = Form(...),
-    numofresults: int = Form(...),
-    question: str = Form(...),
-    filepath: str = Form(...),
+    request: Request
 ):
-    file_locat= "rag_core/src/"+filepath
-    print(file_locat)
-    result = get_answer_from_model(file_locat, chunks, numofresults, question)
-        
-    return  result
+    data = await request.json()
+    print(data)
+    chunks = data.get('chunks')
+    numofresults = data.get('numofresults')
+    question = data.get('question')
+    filepaths = data.get('filepaths')
+
+    print("WAWWWWWWWWWWWWWWWWW")
+    new_filepaths = [f"rag_core/src/{filepath}" for filepath in filepaths]
+    print(new_filepaths)
+
+    result = get_answer_from_model( new_filepaths ,chunks, numofresults, question)
+    return result    
+    
  
