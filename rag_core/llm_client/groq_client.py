@@ -24,8 +24,11 @@ class GroqClient(LLMClientService):
             }
         ],
         model=groq_model,
+
         )
-       
-        return response
+        
+
+        return {"message":response.choices[0].message.content}
+ 
 
 

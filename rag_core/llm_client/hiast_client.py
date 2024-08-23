@@ -21,5 +21,6 @@ class HiastClient(LLMClientService):
             'content': content,
         },
         ])
-        return response
+       
+        return {"message":response['message']['content']}
 

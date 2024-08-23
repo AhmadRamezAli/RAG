@@ -7,6 +7,7 @@ from rag_core.llm_client.hiast_client import HiastClient
 from typing import List
 from rag_core.llm_client.groq_client import GroqClient
 
+import json
 def get_answer_from_model(docpaths :List[str] ,chunks,numofresults,question):
     fulldocs=[]
     for file in docpaths:
@@ -50,4 +51,5 @@ def get_answer_from_model(docpaths :List[str] ,chunks,numofresults,question):
     client = GroqClient()
     response = client.chat('user',template)
     collection.delete(ids=ids)
+    print(response)
     return response

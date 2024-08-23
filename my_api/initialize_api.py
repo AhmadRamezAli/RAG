@@ -5,12 +5,11 @@ from pydantic import BaseModel
 from typing import List
 router = APIRouter(prefix="/api")
 
-
-class RequestModel(BaseModel):
+class QueryRequest(BaseModel):
     chunks: int
     numofresults: int
     question: str
-    file:UploadFile
+    filepaths: List[str]
 @router.get("/")
 def root():
     return {"message": "Hello tt"}
@@ -38,22 +37,13 @@ async def postupload(
     return  {"message": "file saved saccussefully"}
 
 
+
 @router.post("/query/")
-async def postq(
-    request: Request
-):
-    data = await request.json()
-    print(data)
-    chunks = data.get('chunks')
-    numofresults = data.get('numofresults')
-    question = data.get('question')
-    filepaths = data.get('filepaths')
+async def postq(query_request: QueryRequest):
+    chunks = query_request.chunks
+    numofresults = query_request.numofresults
+    question = query_request.question
+    filepaths = [f"rag_core/src/{file}" for file in query_request.filepaths]
 
-    print("WAWWWWWWWWWWWWWWWWW")
-    new_filepaths = [f"rag_core/src/{filepath}" for filepath in filepaths]
-    print(new_filepaths)
-
-    result = get_answer_from_model( new_filepaths ,chunks, numofresults, question)
-    return result    
-    
- 
+    result = get_answer_from_model(filepaths, chunks, numofresults, question)
+    return result
