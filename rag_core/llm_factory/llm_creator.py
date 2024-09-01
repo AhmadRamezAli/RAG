@@ -1,6 +1,6 @@
 
 from abc import ABC, abstractmethod
-from llm_client.llm_client_service import LLMClientService
+from rag_core.llm_client.llm_client_service import LLMClientService
 
 class LLMClientCreator(ABC):
     @abstractmethod
