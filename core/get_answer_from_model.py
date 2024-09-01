@@ -1,21 +1,20 @@
 import uuid
-from rag_core.convertor import Convertor
-from rag_core.spliter import split_text_into_chunks
-from rag_core.loaders.pdf_loader import PDFLoader 
-from rag_core.chromadbinit import collection
-from rag_core.llm_client.hiast_client import HiastClient
+from core.convertor import Convertor
+from core.spliter import split_text_into_chunks
+from core.loaders.pdf_loader import PDFLoader 
+from core.chromadbinit import collection
+from core.llm_client.hiast_client import HiastClient
 from typing import List
-from rag_core.llm_client.groq_client import GroqClient
-from rag_core.llm_client.llm_client_service import LLMClientService
+from core.llm_client.groq_client import GroqClient
+from core.llm_client.llm_client_service import LLMClientService
 import json
-from rag_core.file_tracker import FileTracker
+from core.file_tracker import FileTracker
 def get_answer_from_model(client:LLMClientService, docpaths :List[str] ,chunks,numofresults,question):
     
     ok= False
     
     if docpaths != FileTracker.static_file_path:
         FileTracker.static_file_path=docpaths
-        print("QQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQQ")
         fulldocs=[]
         for file in docpaths:
             
