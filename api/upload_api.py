@@ -1,18 +1,12 @@
 from fastapi import FastAPI,Body, File, Form, UploadFile,Request
 from fastapi import APIRouter
-from rag_core.get_answer_from_model import get_answer_from_model
+from core.get_answer_from_model import get_answer_from_model
+from core.llm_factory.llm_initializer import LLM_initializer
 from pydantic import BaseModel
 from typing import List
+import os
 router = APIRouter(prefix="/api")
 
-class QueryRequest(BaseModel):
-    chunks: int
-    numofresults: int
-    question: str
-    filepaths: List[str]
-@router.get("/")
-def root():
-    return {"message": "Hello tt"}
 
 @router.post("/uploadfile/")
 async def postupload(
@@ -21,8 +15,10 @@ async def postupload(
     print(len(files))
     for file in files:
         print(f"Received file: {file.filename}, size: {file.size} bytes")
-        file_location = f"rag_core/src/{file.filename}"
-
+        file_location = f"core/data/{file.filename}"
+        if os.path.exists(file_location):
+            print(f"File {file.filename} already exists at {file_location}. Skipping save.")
+            continue 
         try:
             # Save the file
             with open(file_location, "wb") as f:
@@ -37,13 +33,3 @@ async def postupload(
     return  {"message": "file saved saccussefully"}
 
 
-
-@router.post("/query/")
-async def postq(query_request: QueryRequest):
-    chunks = query_request.chunks
-    numofresults = query_request.numofresults
-    question = query_request.question
-    filepaths = [f"rag_core/src/{file}" for file in query_request.filepaths]
-
-    result = get_answer_from_model(filepaths, chunks, numofresults, question)
-    return result

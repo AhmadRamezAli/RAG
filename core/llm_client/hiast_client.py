@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from rag_core.llm_client.llm_client_service import LLMClientService
+from core.llm_client.llm_client_service import LLMClientService
 from ollama import Client
 from dotenv import load_dotenv
 import os
